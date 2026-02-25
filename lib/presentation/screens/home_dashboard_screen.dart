@@ -117,9 +117,9 @@ class HomeDashboardScreen extends StatelessWidget {
                     l10n.dailyRecitation,
                     style: TextStyle(color: AppColors.emerald.withOpacity(0.6), fontWeight: FontWeight.w600),
                   ),
-                  const Text(
-                    "4 / 5 Ayat",
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.emerald),
+                  Text(
+                    l10n.ayatProgress(4, 5),
+                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.emerald),
                   ),
                 ],
               ),
@@ -127,7 +127,7 @@ class HomeDashboardScreen extends StatelessWidget {
                 radius: 40.0,
                 lineWidth: 8.0,
                 percent: 0.8,
-                center: const Text("80%", style: TextStyle(fontWeight: FontWeight.bold)),
+                center: Text(l10n.percentValue(80), style: const TextStyle(fontWeight: FontWeight.bold)),
                 progressColor: AppColors.gold,
                 backgroundColor: AppColors.gold.withOpacity(0.1),
                 circularStrokeCap: CircularStrokeCap.round,
@@ -209,10 +209,10 @@ class HomeDashboardScreen extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          const BadgeCard(name: "First Verse", icon: Icons.auto_awesome, isUnlocked: true),
-          const BadgeCard(name: "3 Day Streak", icon: Icons.bolt, isUnlocked: true),
-          const BadgeCard(name: "Night Owl", icon: Icons.nightlight_round, isUnlocked: true),
-          BadgeCard(name: "Khatim", icon: Icons.menu_book, isUnlocked: false, color: Colors.grey.shade300),
+          BadgeCard(name: l10n.firstVerse, icon: Icons.auto_awesome, isUnlocked: true),
+          BadgeCard(name: l10n.threeDayStreak, icon: Icons.bolt, isUnlocked: true),
+          BadgeCard(name: l10n.nightOwl, icon: Icons.nightlight_round, isUnlocked: true),
+          BadgeCard(name: l10n.khatim, icon: Icons.menu_book, isUnlocked: false, color: Colors.grey.shade300),
         ],
       ),
     );
@@ -231,10 +231,10 @@ class HomeDashboardScreen extends StatelessWidget {
           children: [
             const Icon(Icons.format_quote, color: AppColors.gold, size: 40),
             const SizedBox(height: 16),
-            const Text(
-              "\"The best among you are those who learn the Qur'an and teach it.\"",
+            Text(
+              l10n.prophetQuote,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontStyle: FontStyle.italic,
@@ -243,7 +243,7 @@ class HomeDashboardScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              "Prophet Muhammad (PBUH)",
+              l10n.prophetName,
               style: TextStyle(color: AppColors.gold.withOpacity(0.8), fontWeight: FontWeight.bold),
             ),
           ],

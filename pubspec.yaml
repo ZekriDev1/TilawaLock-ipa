@@ -40,6 +40,7 @@ dev_dependencies:
   riverpod_generator: ^2.4.0
   build_runner: ^2.4.13
   hive_generator: ^2.0.1
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   generate: true
@@ -48,3 +49,11 @@ flutter:
   assets:
     - assets/applogo.png
     - assets/images/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/applogo.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#059669"
+  adaptive_icon_foreground: "assets/applogo.png"

@@ -3,6 +3,8 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:tilawalock/l10n/app_localizations.dart';
 import '../../core/constants/colors.dart';
+import '../../core/services/local_database_manager.dart';
+import '../../core/services/achievement_engine.dart';
 import '../widgets/badge_card.dart';
 import 'settings_screen.dart';
 
@@ -13,6 +15,18 @@ class HomeDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     
+    // Fetch real data
+    final int streak = LocalDatabaseManager.getStreak();
+    final int points = LocalDatabaseManager.getPoints();
+    final int verses = LocalDatabaseManager.getVerses();
+    final int appsBlockedCount = LocalDatabaseManager.getLockedApps().length;
+    final int timeSavedMinutes = LocalDatabaseManager.getTimeSaved();
+    
+    // Progress calculation (e.g. daily goal is 5 verses)
+    const int dailyGoal = 5;
+    final double progress = (verses % dailyGoal) / dailyGoal;
+    final int dailyProgressCount = verses % dailyGoal;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: CustomScrollView(
@@ -24,9 +38,9 @@ class HomeDashboardScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDailyProgress(l10n),
+                  _buildDailyProgress(l10n, dailyProgressCount, dailyGoal, progress, streak, points),
                   const SizedBox(height: 24),
-                  _buildStatsGrid(l10n),
+                  _buildStatsGrid(l10n, appsBlockedCount, timeSavedMinutes),
                   const SizedBox(height: 32),
                   Text(
                     l10n.achievements,
@@ -91,7 +105,7 @@ class HomeDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDailyProgress(AppLocalizations l10n) {
+  Widget _buildDailyProgress(AppLocalizations l10n, int current, int total, double percent, int streak, int points) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -118,7 +132,7 @@ class HomeDashboardScreen extends StatelessWidget {
                     style: TextStyle(color: AppColors.emerald.withOpacity(0.6), fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    l10n.ayatProgress(4, 5),
+                    l10n.ayatProgress(current, total),
                     style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.emerald),
                   ),
                 ],
@@ -126,8 +140,8 @@ class HomeDashboardScreen extends StatelessWidget {
               CircularPercentIndicator(
                 radius: 40.0,
                 lineWidth: 8.0,
-                percent: 0.8,
-                center: Text(l10n.percentValue(80), style: const TextStyle(fontWeight: FontWeight.bold)),
+                percent: percent.clamp(0.0, 1.0),
+                center: Text(l10n.percentValue((percent * 100).toInt()), style: const TextStyle(fontWeight: FontWeight.bold)),
                 progressColor: AppColors.gold,
                 backgroundColor: AppColors.gold.withOpacity(0.1),
                 circularStrokeCap: CircularStrokeCap.round,
@@ -138,8 +152,8 @@ class HomeDashboardScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildSmallStat(l10n.streak, l10n.days(7), Icons.local_fire_department_rounded, Colors.orange),
-              _buildSmallStat(l10n.points, "1,240", Icons.stars_rounded, AppColors.gold),
+              _buildSmallStat(l10n.streak, l10n.days(streak), Icons.local_fire_department_rounded, Colors.orange),
+              _buildSmallStat(l10n.points, points.toString(), Icons.stars_rounded, AppColors.gold),
             ],
           ),
         ],
@@ -163,7 +177,11 @@ class HomeDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsGrid(AppLocalizations l10n) {
+  Widget _buildStatsGrid(AppLocalizations l10n, int appsCount, int timeMinutes) {
+    String timeStr = timeMinutes >= 60 
+        ? "${(timeMinutes / 60).floor()}h ${timeMinutes % 60}m"
+        : "${timeMinutes}m";
+
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -172,8 +190,8 @@ class HomeDashboardScreen extends StatelessWidget {
       mainAxisSpacing: 16,
       childAspectRatio: 1.5,
       children: [
-        _buildStatCard(l10n.appsBlocked, "12", Icons.block_flipped, Colors.red.shade400),
-        _buildStatCard(l10n.timeSaved, "2h 15m", Icons.timer_outlined, Colors.blue.shade400),
+        _buildStatCard(l10n.appsBlocked, appsCount.toString(), Icons.block_flipped, Colors.red.shade400),
+        _buildStatCard(l10n.timeSaved, timeStr, Icons.timer_outlined, Colors.blue.shade400),
       ],
     );
   }
@@ -209,10 +227,26 @@ class HomeDashboardScreen extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          BadgeCard(name: l10n.firstVerse, icon: Icons.auto_awesome, isUnlocked: true),
-          BadgeCard(name: l10n.threeDayStreak, icon: Icons.bolt, isUnlocked: true),
-          BadgeCard(name: l10n.nightOwl, icon: Icons.nightlight_round, isUnlocked: true),
-          BadgeCard(name: l10n.khatim, icon: Icons.menu_book, isUnlocked: false, color: Colors.grey.shade300),
+          BadgeCard(
+            name: l10n.firstVerse, 
+            icon: Icons.auto_awesome, 
+            isUnlocked: LocalDatabaseManager.isAchievementUnlocked(AchievementEngine.KEY_FIRST_VERSE)
+          ),
+          BadgeCard(
+            name: l10n.threeDayStreak, 
+            icon: Icons.bolt, 
+            isUnlocked: LocalDatabaseManager.isAchievementUnlocked(AchievementEngine.KEY_THREE_DAY_STREAK)
+          ),
+          BadgeCard(
+            name: l10n.nightOwl, 
+            icon: Icons.nightlight_round, 
+            isUnlocked: LocalDatabaseManager.isAchievementUnlocked(AchievementEngine.KEY_NIGHT_OWL)
+          ),
+          BadgeCard(
+            name: l10n.khatim, 
+            icon: Icons.menu_book, 
+            isUnlocked: LocalDatabaseManager.isAchievementUnlocked(AchievementEngine.KEY_KHATIM)
+          ),
         ],
       ),
     );

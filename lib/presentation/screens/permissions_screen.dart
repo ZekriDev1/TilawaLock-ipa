@@ -3,8 +3,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:tilawalock/l10n/app_localizations.dart';
 import '../../core/constants/colors.dart';
 import '../../core/services/permission_manager.dart';
-import '../../core/services/lifecycle_permission_handler.dart';
-import 'app_selection_screen.dart';
+import 'app_lock_setup_screen.dart';
 import 'home_dashboard_screen.dart';
 
 class PermissionsScreen extends StatefulWidget {
@@ -14,173 +13,68 @@ class PermissionsScreen extends StatefulWidget {
   State<PermissionsScreen> createState() => _PermissionsScreenState();
 }
 
-/// Uses [LifecyclePermissionMixin] so:
-///   - Permission re-checked automatically when user returns from Settings
-///   - No crashes from stale state
-///   - No duplicate requests
-class _PermissionsScreenState extends State<PermissionsScreen>
-    with WidgetsBindingObserver, LifecyclePermissionMixin {
-  // Track each individual permission for the UI.
+class _PermissionsScreenState extends State<PermissionsScreen> {
   bool _isMicGranted = false;
   bool _isNotificationGranted = false;
   bool _isOverlayGranted = false;
   bool _isUsageGranted = false;
 
-  // Guard: prevents requesting while another request is in flight.
-  bool _isRequestingNotification = false;
+  String? _deniedMessage;
 
   @override
   void initState() {
     super.initState();
-    // Register lifecycle observer + schedule initial permission check.
-    initLifecyclePermission();
-    // Also check the other permissions on launch.
-    _checkAllPermissions();
+    _checkInitialPermissions();
   }
 
-  @override
-  void dispose() {
-    // Must unregister before disposal to prevent memory leaks / crashes.
-    disposeLifecyclePermission();
-    super.dispose();
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // Called by LifecyclePermissionMixin whenever mic state changes
-  // (including on resume from Settings)
-  // ─────────────────────────────────────────────────────────────
-  @override
-  void onMicPermissionChanged(MicPermissionResult result) {
-    if (!mounted) return; // Safety: never setState on a disposed widget
-    setState(() => _isMicGranted = result == MicPermissionResult.granted);
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // Check notification + overlay on resume too (via lifecycle)
-  // ─────────────────────────────────────────────────────────────
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Let the mixin handle the mic re-check.
-    super.didChangeAppLifecycleState(state);
-
-    // Also refresh notifications + overlay on resume.
-    if (state == AppLifecycleState.resumed) {
-      _checkAllPermissions();
+  Future<void> _checkInitialPermissions() async {
+    final mic = await PermissionManager.instance.checkMicrophone();
+    if (mounted) {
+      setState(() {
+        _isMicGranted = mic == PermissionResult.granted;
+      });
     }
   }
 
-  Future<void> _checkAllPermissions() async {
-    if (!mounted) return;
-    final notification = await PermissionManager.instance.checkNotification();
-    final overlay = await PermissionManager.instance.checkOverlay();
-
-    if (!mounted) return;
-    setState(() {
-      _isNotificationGranted = notification == MicPermissionResult.granted;
-      _isOverlayGranted = overlay == MicPermissionResult.granted;
-      // Treat overlay granted as a proxy for usage stats (both advanced Android)
-      _isUsageGranted = overlay == MicPermissionResult.granted;
-    });
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // Permission request handlers
-  // ─────────────────────────────────────────────────────────────
-
   Future<void> _requestMic() async {
-    // Delegates to LifecyclePermissionMixin which handles all edge cases.
-    await requestMicPermission(context);
+    final result = await PermissionManager.instance.requestMicrophone();
+    if (mounted) {
+      setState(() {
+        _isMicGranted = result == PermissionResult.granted;
+        _deniedMessage = result != PermissionResult.granted ? "Microphone access denied." : null;
+      });
+    }
   }
 
   Future<void> _requestNotification() async {
-    if (_isRequestingNotification || !mounted) return;
-    _isRequestingNotification = true;
-    try {
-      final current = await PermissionManager.instance.checkNotification();
-
-      if (current == MicPermissionResult.granted) {
-        if (mounted) setState(() => _isNotificationGranted = true);
-        return;
-      }
-
-      if (current == MicPermissionResult.permanentlyDenied) {
-        if (mounted) _showSettingsDialog('Notifications', 'notification');
-        return;
-      }
-
-      final result = await PermissionManager.instance.requestNotification();
-      if (!mounted) return;
-
-      if (result == MicPermissionResult.permanentlyDenied) {
-        _showSettingsDialog('Notifications', 'notification');
-      } else {
-        setState(() => _isNotificationGranted = result == MicPermissionResult.granted);
-      }
-    } finally {
-      _isRequestingNotification = false;
+    final result = await PermissionManager.instance.requestNotification();
+    if (mounted) {
+      setState(() {
+        _isNotificationGranted = result == PermissionResult.granted;
+        _deniedMessage = result != PermissionResult.granted ? "Notification permission denied." : null;
+      });
     }
   }
 
-  /// Usage Stats + Overlay both require the dedicated Android Settings page.
-  void _requestUsage() {
-    if (!mounted) return;
-    _showSettingsDialog(
-      'Usage Statistics Access',
-      'usage stats',
-      detail: 'Please enable "Usage Access" or "Apps with usage access" for Tilawa Lock.',
-    );
+  Future<void> _requestOverlay() async {
+    final result = await PermissionManager.instance.requestOverlay();
+    if (mounted) {
+      setState(() {
+        _isOverlayGranted = result == PermissionResult.granted;
+        _deniedMessage = result != PermissionResult.granted ? "Overlay permission denied." : null;
+      });
+    }
   }
 
-  void _requestOverlay() {
-    if (!mounted) return;
-    _showSettingsDialog(
-      'Display Over Other Apps',
-      'overlay',
-      detail: 'Please enable "Display over other apps" for Tilawa Lock.',
-    );
+  Future<void> _requestUsage() async {
+    final result = await PermissionManager.instance.requestUsageStats();
+    if (mounted) {
+      setState(() {
+        _isUsageGranted = result == PermissionResult.granted;
+        _deniedMessage = result != PermissionResult.granted ? "Usage stats access denied." : null;
+      });
+    }
   }
-
-  void _showSettingsDialog(String permName, String shortName, {String? detail}) {
-    showDialog<void>(
-      context: context,
-      builder: (dialogCtx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          '$permName Permission',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.emerald,
-          ),
-        ),
-        content: Text(
-          detail ??
-              '$permName permission was denied. Please enable it in '
-                  'Settings for Tilawa Lock.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogCtx).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(dialogCtx).pop();
-              // When user returns, didChangeAppLifecycleState(resumed)
-              // automatically triggers _checkAllPermissions().
-              PermissionManager.instance.openSettings();
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.emerald),
-            child: const Text('Open Settings',
-                style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // Continue gating: microphone + notification are mandatory
-  // ─────────────────────────────────────────────────────────────
 
   void _handleSkip() {
     Navigator.of(context).pushReplacement(
@@ -188,32 +82,17 @@ class _PermissionsScreenState extends State<PermissionsScreen>
     );
   }
 
-  bool get _canContinue => _isMicGranted && _isNotificationGranted;
-
   void _handleContinue() {
-    if (_canContinue) {
+    if (_isMicGranted && _isNotificationGranted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const AppSelectionScreen()),
+        MaterialPageRoute(builder: (_) => const AppLockSetupScreen()),
       );
     } else {
-      final missing = [
-        if (!_isMicGranted) 'Microphone',
-        if (!_isNotificationGranted) 'Notifications',
-      ].join(' and ');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please grant $missing to continue.'),
-          backgroundColor: Colors.red.shade700,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      setState(() {
+        _deniedMessage = "Please grant Microphone and Notifications to continue.";
+      });
     }
   }
-
-  // ─────────────────────────────────────────────────────────────
-  // UI
-  // ─────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +106,6 @@ class _PermissionsScreenState extends State<PermissionsScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Skip button row ────────────────────────────
               Align(
                 alignment: AlignmentDirectional.topEnd,
                 child: TextButton(
@@ -235,7 +113,7 @@ class _PermissionsScreenState extends State<PermissionsScreen>
                   child: Text(
                     'Skip',
                     style: TextStyle(
-                      color: AppColors.emerald.withValues(alpha: 0.65),
+                      color: AppColors.emerald.withOpacity(0.65),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -262,7 +140,6 @@ class _PermissionsScreenState extends State<PermissionsScreen>
               ),
               const SizedBox(height: 40),
 
-              // ── Microphone (mandatory) ─────────────
               _PermissionTile(
                 title: l10n.microphone,
                 description: l10n.microphoneDesc,
@@ -272,7 +149,6 @@ class _PermissionsScreenState extends State<PermissionsScreen>
                 onTap: _requestMic,
               ),
 
-              // ── Notifications (mandatory) ──────────
               _PermissionTile(
                 title: l10n.notifications,
                 description: l10n.notificationsDesc,
@@ -282,7 +158,6 @@ class _PermissionsScreenState extends State<PermissionsScreen>
                 onTap: _requestNotification,
               ),
 
-              // ── Usage Stats (optional / Android) ──
               _PermissionTile(
                 title: l10n.usageStats,
                 description: l10n.usageStatsDesc,
@@ -292,7 +167,6 @@ class _PermissionsScreenState extends State<PermissionsScreen>
                 onTap: _requestUsage,
               ),
 
-              // ── System Overlay (optional / Android) ─
               _PermissionTile(
                 title: l10n.overlay,
                 description: l10n.overlayDesc,
@@ -304,13 +178,25 @@ class _PermissionsScreenState extends State<PermissionsScreen>
 
               const Spacer(),
 
+              if (_deniedMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Center(
+                    child: Text(
+                      _deniedMessage!,
+                      style: const TextStyle(color: Colors.red, fontSize: 13),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
                   onPressed: _handleContinue,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _canContinue
+                    backgroundColor: (_isMicGranted && _isNotificationGranted)
                         ? AppColors.emerald
                         : AppColors.emerald.withOpacity(0.45),
                   ),
@@ -325,10 +211,6 @@ class _PermissionsScreenState extends State<PermissionsScreen>
     );
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Reusable permission row widget
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _PermissionTile extends StatelessWidget {
   final String title;
@@ -349,16 +231,11 @@ class _PermissionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: isGranted
-            ? Border.all(color: AppColors.gold.withOpacity(0.4), width: 1.5)
-            : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -372,8 +249,7 @@ class _PermissionTile extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color:
-                (isGranted ? AppColors.gold : AppColors.emerald).withOpacity(0.1),
+            color: (isGranted ? AppColors.gold : AppColors.emerald).withOpacity(0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -383,29 +259,17 @@ class _PermissionTile extends StatelessWidget {
         ),
         title: Row(
           children: [
-            Text(title,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            if (isMandatory) ...[
-              const SizedBox(width: 4),
-              const Text('*',
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16)),
-            ],
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            if (isMandatory)
+              const Text(' *', style: TextStyle(color: Colors.red)),
           ],
         ),
-        subtitle: Text(description,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+        subtitle: Text(description, style: const TextStyle(fontSize: 12)),
         trailing: isGranted
             ? const Icon(Icons.check_circle, color: AppColors.gold)
-            : ElevatedButton(
+            : TextButton(
                 onPressed: onTap,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  minimumSize: const Size(80, 36),
-                ),
-                child: Text(l10n.allow),
+                child: const Text('Allow'),
               ),
       ),
     );

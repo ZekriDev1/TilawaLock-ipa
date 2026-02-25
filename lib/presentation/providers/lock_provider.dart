@@ -33,18 +33,14 @@ class LockNotifier extends StateNotifier<LockState> {
   }
 
   void toggleApp(String packageName) async {
-    if (state.selectedApps.contains(packageName)) {
-      state = LockState(
-        selectedApps: state.selectedApps.where((e) => e != packageName).toList(),
-        usageLimit: state.usageLimit,
-      );
-    } else {
-      state = LockState(
-        selectedApps: [...state.selectedApps, packageName],
-        usageLimit: state.usageLimit,
-      );
-    }
-    await _repository.setDailyUsageLimit(state.usageLimit);
+    final newList = state.selectedApps.contains(packageName)
+        ? state.selectedApps.where((e) => e != packageName).toList()
+        : [...state.selectedApps, packageName];
+
+    state = LockState(selectedApps: newList, usageLimit: state.usageLimit);
+
+    // Persist the updated list to Hive
+    await LocalDatabaseManager.setLockedApps(newList);
     _updateWidget();
   }
 

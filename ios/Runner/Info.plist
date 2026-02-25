@@ -5,7 +5,7 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app requires microphone access to listen to your recitation.</string>
+	<string>This app requires microphone access to listen to recitation.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This app requires speech recognition to match your recitation.</string>
 	<key>UIBackgroundModes</key>

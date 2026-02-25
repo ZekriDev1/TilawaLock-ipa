@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
-import 'package:tilawalock/l10n/app_localizations.dart';
 import '../../core/constants/colors.dart';
-import 'recitation_screen.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
 class LockOverlayScreen extends StatelessWidget {
   const LockOverlayScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
+    // Note: Localization might not be available in the overlay isolate easily
+    // so we use hardcoded strings for the overlay for reliability.
+    
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
@@ -21,7 +21,7 @@ class LockOverlayScreen extends StatelessWidget {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Container(
-                color: AppColors.emerald.withOpacity(0.8),
+                color: AppColors.emerald.withOpacity(0.9),
               ),
             ),
           ),
@@ -49,9 +49,9 @@ class LockOverlayScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 40),
                   FadeInUp(
-                    child: Text(
-                      l10n.timeForTilawa,
-                      style: const TextStyle(
+                    child: const Text(
+                      "Time for Tilawa",
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -62,7 +62,7 @@ class LockOverlayScreen extends StatelessWidget {
                   FadeInUp(
                     delay: const Duration(milliseconds: 200),
                     child: Text(
-                      l10n.lockMessage,
+                      "This app is locked until you recite Quran. Discipline begins with recitation.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
@@ -78,17 +78,16 @@ class LockOverlayScreen extends StatelessWidget {
                       height: 56,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const RecitationScreen())
-                          );
+                          // Signal to main app to open recitation
+                          FlutterOverlayWindow.closeOverlay();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.gold,
                           foregroundColor: AppColors.emerald,
                         ),
-                        child: Text(
-                          l10n.startRecitation,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        child: const Text(
+                          "Start Recitation",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -96,10 +95,10 @@ class LockOverlayScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   TextButton(
                     onPressed: () {
-                      // Minimize app or go home
+                      FlutterOverlayWindow.closeOverlay();
                     },
                     child: Text(
-                      l10n.closeAndDiscipline,
+                      "Close",
                       style: TextStyle(color: Colors.white.withOpacity(0.5)),
                     ),
                   ),

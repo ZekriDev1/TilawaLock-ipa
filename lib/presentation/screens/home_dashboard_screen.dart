@@ -33,9 +33,9 @@ class HomeDashboardScreen extends StatelessWidget {
                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.emerald),
                   ),
                   const SizedBox(height: 16),
-                  _buildAchievements(),
+                  _buildAchievements(l10n),
                   const SizedBox(height: 32),
-                  _buildMotivationalQuote(),
+                  _buildMotivationalQuote(l10n),
                   const SizedBox(height: 100),
                 ],
               ),
@@ -204,7 +204,7 @@ class HomeDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAchievements() {
+  Widget _buildAchievements(AppLocalizations l10n) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -218,7 +218,7 @@ class HomeDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMotivationalQuote() {
+  Widget _buildMotivationalQuote(AppLocalizations l10n) {
     return FadeInUp(
       child: Container(
         padding: const EdgeInsets.all(24),

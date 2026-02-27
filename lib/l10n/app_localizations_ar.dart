@@ -9,245 +9,304 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appTitle => 'تلاوة لوك';
+  String get appName => 'تلاوة لوك';
 
   @override
-  String get tagline => 'الانضباط يبدأ بالتلاوة.';
+  String get appTagline => 'رتل لتفتح';
 
   @override
-  String get getStarted => 'ابدأ الآن';
+  String get unlockTitle => 'الشاشة مقفلة';
 
   @override
-  String get next => 'التالي';
+  String get unlockInstruction => 'يرجى تلاوة الآية أدناه لفتح القفل';
 
   @override
-  String get skip => 'تخطي';
+  String get unlockButton => 'اضغط للتلاوة';
 
   @override
-  String get permissionsTitle => 'الأذونات المطلوبة';
+  String get unlockSuccess => 'تم فتح القفل بنجاح';
 
   @override
-  String get permissionsSubtitle => 'يحتاج تطبيق تلاوة لوك إلى هذه الأذونات لمساعدتك على الانضباط.';
+  String get unlockFail => 'تلاوة غير صحيحة';
 
   @override
-  String get microphone => 'الميكروفون';
+  String get recitationTitle => 'التلاوة';
 
   @override
-  String get microphoneDesc => 'مطلوب لمطابقة تلاوة القرآن.';
+  String get recitationStart => 'ابدأ التلاوة';
 
   @override
-  String get usageStats => 'إحصائيات الاستخدام';
+  String get recitationStop => 'إيقاف التلاوة';
 
   @override
-  String get usageStatsDesc => 'يستخدم لمراقبة وتقييد التطبيقات المشتتة.';
+  String get recitationListening => 'جاري الاستماع...';
 
   @override
-  String get notifications => 'الإشعارات';
+  String get recitationCorrect => 'صحيح!';
 
   @override
-  String get notificationsDesc => 'لإرسال التذكيرات وتنبيهات الجلسة.';
+  String get recitationIncorrect => 'غير صحيح، يرجى المحاولة مرة أخرى';
 
   @override
-  String get overlay => 'ظهور فوق التطبيقات';
+  String get recitationRetry => 'إعادة المحاولة';
 
   @override
-  String get overlayDesc => 'مطلوب لإظهار شاشة القفل فوق التطبيقات الأخرى.';
-
-  @override
-  String get allow => 'سماح';
-
-  @override
-  String get continueText => 'متابعة';
-
-  @override
-  String get selectApps => 'اختر التطبيقات للقفل';
-
-  @override
-  String get searchApps => 'ابحث عن التطبيقات...';
-
-  @override
-  String get usageLimit => 'حد الاستخدام';
-
-  @override
-  String get dailyAllowedUsage => 'الاستخدام اليومي المسموح به';
-
-  @override
-  String get usageLimitDesc => 'كم من الوقت تود السماح لنفسك باستخدام التطبيقات المختارة يومياً؟';
-
-  @override
-  String minutes(num count) {
+  String ayatRemaining(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count دقائق',
-      two: 'دقيقتان',
-      one: 'دقيقة واحدة',
+      other: '$count آية متبقية',
+      many: '$count آية متبقية',
+      few: '$count آيات متبقية',
+      two: 'آيتان متبقيتان',
+      one: 'آية واحدة متبقية',
+      zero: 'لا توجد آيات متبقية',
     );
     return '$_temp0';
   }
 
   @override
-  String hours(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count ساعات',
-      two: 'ساعتان',
-      one: 'ساعة واحدة',
-    );
-    return '$_temp0';
+  String onboardingStep(int current, int total) {
+    return 'الخطوة $current من $total';
   }
 
   @override
-  String get customMinutes => 'دقائق مخصصة...';
+  String get ramadanModeTitle => 'وضع رمضان';
 
   @override
-  String get recitationSetup => 'إعداد التلاوة';
+  String get ramadanModeActive => 'نشط';
 
   @override
-  String get recitationRequirement => 'متطلبات التلاوة';
+  String get ramadanModeInactive => 'غير نشط';
 
   @override
-  String get difficultyLevel => 'مستوى الصعوبة';
+  String get settingsTitle => 'الإعدادات';
 
   @override
-  String get finishSetup => 'إنهاء الإعداد';
+  String get settingsLanguageSection => 'اللغة';
 
   @override
-  String get easy => 'سهل';
+  String get settingsLanguageTitle => 'لغة التطبيق';
 
   @override
-  String get easyDesc => 'مطابقة الكلمات فقط';
+  String get settingsPermissionsSection => 'الأذونات';
 
   @override
-  String get standard => 'قياسي';
+  String get settingsQuranSection => 'إعدادات القرآن';
 
   @override
-  String get standardDesc => 'مطابقة النطق';
+  String get settingsClearCache => 'مسح ذاكرة التخزين المؤقت للقرآن';
 
   @override
-  String get strict => 'صعب';
+  String get settingsClearCacheConfirm =>
+      'هل أنت متأكد من رغبتك في مسح ذاكرة التخزين المؤقت للقرآن؟';
 
   @override
-  String get strictDesc => 'تجويد بدقة عالية';
+  String get languageEnglish => 'الإنجليزية';
 
   @override
-  String get homeGreeting => 'السلام عليكم';
+  String get languageFrench => 'الفرنسية';
 
   @override
-  String get dailyRecitation => 'التلاوة اليومية';
+  String get languageArabic => 'العربية';
 
   @override
-  String get streak => 'التتابُع';
+  String get permissionMicTitle => 'الوصول إلى الميكروفون';
 
   @override
-  String get points => 'النقاط';
+  String get permissionMicBody =>
+      'يحتاج تلاوة لوك إلى الوصول إلى الميكروفون للتحقق من تلاوتك.';
 
   @override
-  String days(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count أيام',
-      two: 'يومان',
-      one: 'يوم واحد',
-    );
-    return '$_temp0';
+  String get permissionMicDenied => 'تم رفض إذن الميكروفون';
+
+  @override
+  String get permissionMicPermanentlyDenied =>
+      'تم رفض إذن الميكروفون بشكل دائم. يرجى تفعيله من الإعدادات.';
+
+  @override
+  String get permissionMicOpenSettings => 'فتح الإعدادات';
+
+  @override
+  String get permissionNotifTitle => 'الإشعارات';
+
+  @override
+  String get permissionNotifBody =>
+      'ابق على المسار الصحيح مع تذكيرات التلاوة اليومية.';
+
+  @override
+  String get permissionNotifDenied => 'تم رفض إذن الإشعارات';
+
+  @override
+  String get permissionOverlayTitle => 'الظهور فوق التطبيقات';
+
+  @override
+  String get permissionOverlayBody =>
+      'مطلوب لإظهار شاشة القفل فوق التطبيقات الأخرى.';
+
+  @override
+  String get permissionOverlayOpenSettings => 'تفعيل الظهور';
+
+  @override
+  String get permissionOverlayNotAvailable =>
+      'الظهور فوق التطبيقات غير متاح على هذا الجهاز';
+
+  @override
+  String get permissionStatusGranted => 'مسموح';
+
+  @override
+  String get permissionStatusDenied => 'مرفوض';
+
+  @override
+  String get permissionStatusNotAvailable => 'غير متاح';
+
+  @override
+  String get onboardingSkip => 'تخطي';
+
+  @override
+  String get onboardingGrantPermission => 'منح الإذن';
+
+  @override
+  String get onboardingOpenSettings => 'فتح الإعدادات';
+
+  @override
+  String get onboardingContinue => 'متابعة';
+
+  @override
+  String get onboardingDone => 'تم';
+
+  @override
+  String get quranSurahListTitle => 'القرآن الكريم';
+
+  @override
+  String get quranSearchPlaceholder => 'ابحث عن سورة...';
+
+  @override
+  String get quranMeccan => 'مكية';
+
+  @override
+  String get quranMedinan => 'مدنية';
+
+  @override
+  String quranAyahCount(int count) {
+    return '$count آيات';
   }
 
   @override
-  String get appsBlocked => 'تطبيقات محجوبة';
-
-  @override
-  String get timeSaved => 'الوقت الموفر';
-
-  @override
-  String get achievements => 'الإنجازات';
-
-  @override
-  String get reciteNow => 'اتلُ الآن';
-
-  @override
-  String get timeForTilawa => 'وقت التلاوة';
-
-  @override
-  String get lockMessage => 'لقد وصلت إلى الحد المسموح به. اتلُ 5 آيات لمتابعة استخدام هذا التطبيق.';
-
-  @override
-  String get startRecitation => 'ابدأ التلاوة';
-
-  @override
-  String get closeAndDiscipline => 'أغلق وانضبط';
-
-  @override
-  String verseCounter(Object current, Object total) {
-    return 'الآية $current من $total';
+  String quranSurahNumber(int number) {
+    return 'سورة رقم $number';
   }
 
   @override
-  String get listening => 'جاري الاستماع...';
+  String get quranLoading => 'جاري تحميل القرآن...';
 
   @override
-  String get tapToRecite => 'اضغط للتلاوة';
+  String get quranLoadError => 'فشل تحميل بيانات القرآن';
 
   @override
-  String get mashaAllah => 'ما شاء الله!';
+  String get quranRetry => 'إعادة المحاولة';
 
   @override
-  String get successMessage => 'تمت التلاوة بنجاح. تم استعادة الجلسة.';
+  String get quranOfflineBanner =>
+      'أنت غير متصل بالإنترنت. يتم عرض البيانات المخزنة.';
 
   @override
-  String get finish => 'إنهاء';
+  String get quranOfflineError =>
+      'أنت غير متصل بالإنترنت ولا توجد بيانات مخزنة متاحة.';
 
   @override
-  String get settings => 'الإعدادات';
+  String get quranSurahDetailTitle => 'تفاصيل السورة';
 
   @override
-  String get language => 'اللغة';
+  String get quranAssignAyah => 'تعيين كهدف';
 
   @override
-  String get arabic => 'العربية';
+  String get quranAyahAssigned => 'تم تعيين الآية بنجاح!';
 
   @override
-  String get english => 'الإنجليزية';
+  String get quranTranslation => 'الترجمة';
 
   @override
-  String get french => 'الفرنسية';
+  String get quranAyahSearchTitle => 'بحث في الآيات';
 
   @override
-  String get ramadanMode => 'وضع رمضان';
+  String get quranAyahSearchPlaceholder => 'أدخل كلمة بحث...';
 
   @override
-  String get ramadanModeDesc => 'قيود أكثر صرامة ومكافآت أعلى خلال الشهر الفضيل.';
+  String get quranAyahSearchNoResults => 'لم يتم العثور على آيات لهذه الكلمة';
 
   @override
-  String get strictRecitation => 'تلاوة دقيقة';
+  String get quranBrowseBySurah => 'تصفح حسب السورة';
 
   @override
-  String ayatProgress(Object current, Object total) {
-    return '$current / $total آيات';
-  }
+  String get quranAssignmentTitle => 'الآية المستهدفة';
 
   @override
-  String percentValue(Object value) {
-    return '$value٪';
-  }
+  String get quranAssignmentNone => 'لم يتم تعيين آية مستهدفة';
 
   @override
-  String get firstVerse => 'الآية الأولى';
+  String get quranAssignmentClear => 'مسح الهدف';
 
   @override
-  String get threeDayStreak => 'ثلاثة أيام متتالية';
+  String get quranAssignmentConfirm => 'هل تريد مسح هذا التعيين؟';
 
   @override
-  String get nightOwl => 'بومة الليل';
+  String get errorGeneric => 'حدث خطأ ما';
 
   @override
-  String get khatim => 'خاتم';
+  String get errorNetwork => 'خطأ في الشبكة، تحقق من الاتصال';
 
   @override
-  String get prophetQuote => '\"خيركم من تعلم القرآن وعلمه\"';
+  String get errorMicUnavailable => 'الميكروفون غير متاح';
 
   @override
-  String get prophetName => 'النبي محمد (ﷺ)';
+  String get errorOffline => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get errorApiTimeout => 'انتهت مهلة الطلب';
+
+  @override
+  String get errorNotFound => 'المورد غير موجود';
+
+  @override
+  String get motivational1 => 'استمر! أنت تبلي بلاءً حسناً.';
+
+  @override
+  String get motivational2 => 'بكل حرف حسنة.';
+
+  @override
+  String get motivational3 => 'الاستمرار هو المفتاح.';
+
+  @override
+  String get motivational4 => 'تواصل مع القرآن يومياً.';
+
+  @override
+  String get motivational5 => 'بارك الله في جهودك.';
+
+  @override
+  String get saveButton => 'حفظ';
+
+  @override
+  String get cancelButton => 'إلغاء';
+
+  @override
+  String get confirmButton => 'تأكيد';
+
+  @override
+  String get backButton => 'رجوع';
+
+  @override
+  String get openSettingsButton => 'الإعدادات';
+
+  @override
+  String get grantButton => 'منح';
+
+  @override
+  String get manageButton => 'إدارة';
+
+  @override
+  String get retryButton => 'إعادة المحاولة';
+
+  @override
+  String get searchButton => 'بحث';
 }

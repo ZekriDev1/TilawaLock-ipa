@@ -9,242 +9,300 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'TilawaLock';
+  String get appName => 'Tilawa Lock';
 
   @override
-  String get tagline => 'Discipline begins with recitation.';
+  String get appTagline => 'Recite to Unlock';
 
   @override
-  String get getStarted => 'Get Started';
+  String get unlockTitle => 'Screen Locked';
 
   @override
-  String get next => 'Next';
+  String get unlockInstruction => 'Please recite the ayah below to unlock';
 
   @override
-  String get skip => 'Skip';
+  String get unlockButton => 'Tap to Recite';
 
   @override
-  String get permissionsTitle => 'Required Permissions';
+  String get unlockSuccess => 'Unlock Successful';
 
   @override
-  String get permissionsSubtitle => 'TilawaLock needs these permissions to help you stay disciplined.';
+  String get unlockFail => 'Incorrect Recitation';
 
   @override
-  String get microphone => 'Microphone';
+  String get recitationTitle => 'Recitation';
 
   @override
-  String get microphoneDesc => 'Required for Quran recitation matching.';
+  String get recitationStart => 'Start Reciting';
 
   @override
-  String get usageStats => 'Usage Statistics';
+  String get recitationStop => 'Stop Reciting';
 
   @override
-  String get usageStatsDesc => 'Used to monitor and limit distracting apps.';
+  String get recitationListening => 'Listening...';
 
   @override
-  String get notifications => 'Notifications';
+  String get recitationCorrect => 'Correct!';
 
   @override
-  String get notificationsDesc => 'To send reminders and session alerts.';
+  String get recitationIncorrect => 'Incorrect, please try again';
 
   @override
-  String get overlay => 'System Overlay';
+  String get recitationRetry => 'Retry';
 
   @override
-  String get overlayDesc => 'Required to show the lock screen over other apps.';
-
-  @override
-  String get allow => 'Allow';
-
-  @override
-  String get continueText => 'Continue';
-
-  @override
-  String get selectApps => 'Select Apps to Lock';
-
-  @override
-  String get searchApps => 'Search apps...';
-
-  @override
-  String get usageLimit => 'Usage Limit';
-
-  @override
-  String get dailyAllowedUsage => 'Daily Allowed Usage';
-
-  @override
-  String get usageLimitDesc => 'How much time would you like to allow yourself for selected apps each day?';
-
-  @override
-  String minutes(num count) {
+  String ayatRemaining(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count minutes',
-      one: '1 minute',
+      other: '$count ayahs remaining',
+      one: '1 ayah remaining',
+      zero: 'No ayahs remaining',
     );
     return '$_temp0';
   }
 
   @override
-  String hours(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count hours',
-      one: '1 hour',
-    );
-    return '$_temp0';
+  String onboardingStep(int current, int total) {
+    return 'Step $current of $total';
   }
 
   @override
-  String get customMinutes => 'Custom minutes...';
+  String get ramadanModeTitle => 'Ramadan Mode';
 
   @override
-  String get recitationSetup => 'Recitation Setup';
+  String get ramadanModeActive => 'Active';
 
   @override
-  String get recitationRequirement => 'Recitation Requirement';
+  String get ramadanModeInactive => 'Inactive';
 
   @override
-  String get difficultyLevel => 'Difficulty Level';
+  String get settingsTitle => 'Settings';
 
   @override
-  String get finishSetup => 'Finish Setup';
+  String get settingsLanguageSection => 'Language';
 
   @override
-  String get easy => 'Easy';
+  String get settingsLanguageTitle => 'App Language';
 
   @override
-  String get easyDesc => 'Word matching only';
+  String get settingsPermissionsSection => 'Permissions';
 
   @override
-  String get standard => 'Standard';
+  String get settingsQuranSection => 'Quran Settings';
 
   @override
-  String get standardDesc => 'Pronunciation match';
+  String get settingsClearCache => 'Clear Quran Cache';
 
   @override
-  String get strict => 'Strict';
+  String get settingsClearCacheConfirm =>
+      'Are you sure you want to clear the Quran cache?';
 
   @override
-  String get strictDesc => 'High accuracy tajweed';
+  String get languageEnglish => 'English';
 
   @override
-  String get homeGreeting => 'As-salamu alaykum';
+  String get languageFrench => 'French';
 
   @override
-  String get dailyRecitation => 'Daily Recitation';
+  String get languageArabic => 'Arabic';
 
   @override
-  String get streak => 'Streak';
+  String get permissionMicTitle => 'Microphone Access';
 
   @override
-  String get points => 'Points';
+  String get permissionMicBody =>
+      'Tilawa Lock needs microphone access to verify your recitation.';
 
   @override
-  String days(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count Days',
-      one: '1 Day',
-    );
-    return '$_temp0';
+  String get permissionMicDenied => 'Microphone permission denied';
+
+  @override
+  String get permissionMicPermanentlyDenied =>
+      'Microphone permission is permanently denied. Please enable it in settings.';
+
+  @override
+  String get permissionMicOpenSettings => 'Open Settings';
+
+  @override
+  String get permissionNotifTitle => 'Notifications';
+
+  @override
+  String get permissionNotifBody =>
+      'Stay on track with daily recitation reminders.';
+
+  @override
+  String get permissionNotifDenied => 'Notification permission denied';
+
+  @override
+  String get permissionOverlayTitle => 'Draw Over Apps';
+
+  @override
+  String get permissionOverlayBody =>
+      'Required to show the lock screen over other apps.';
+
+  @override
+  String get permissionOverlayOpenSettings => 'Enable Overlay';
+
+  @override
+  String get permissionOverlayNotAvailable =>
+      'Overlay not available on this device';
+
+  @override
+  String get permissionStatusGranted => 'Granted';
+
+  @override
+  String get permissionStatusDenied => 'Denied';
+
+  @override
+  String get permissionStatusNotAvailable => 'N/A';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingGrantPermission => 'Grant Permission';
+
+  @override
+  String get onboardingOpenSettings => 'Open Settings';
+
+  @override
+  String get onboardingContinue => 'Continue';
+
+  @override
+  String get onboardingDone => 'Done';
+
+  @override
+  String get quranSurahListTitle => 'Holy Quran';
+
+  @override
+  String get quranSearchPlaceholder => 'Search Surahs...';
+
+  @override
+  String get quranMeccan => 'Meccan';
+
+  @override
+  String get quranMedinan => 'Medinan';
+
+  @override
+  String quranAyahCount(int count) {
+    return '$count Ayahs';
   }
 
   @override
-  String get appsBlocked => 'Apps Blocked';
-
-  @override
-  String get timeSaved => 'Time Saved';
-
-  @override
-  String get achievements => 'Achievements';
-
-  @override
-  String get reciteNow => 'Recite Now';
-
-  @override
-  String get timeForTilawa => 'Time for Tilawa';
-
-  @override
-  String get lockMessage => 'You\'ve reached your limit. Recite 5 ayat to continue using this app.';
-
-  @override
-  String get startRecitation => 'Start Recitation';
-
-  @override
-  String get closeAndDiscipline => 'Close & Discipline';
-
-  @override
-  String verseCounter(Object current, Object total) {
-    return 'Verse $current of $total';
+  String quranSurahNumber(int number) {
+    return 'Surah $number';
   }
 
   @override
-  String get listening => 'Listening...';
+  String get quranLoading => 'Loading Quran...';
 
   @override
-  String get tapToRecite => 'Tap to Recite';
+  String get quranLoadError => 'Failed to load Quran data';
 
   @override
-  String get mashaAllah => 'Masha\'Allah!';
+  String get quranRetry => 'Retry';
 
   @override
-  String get successMessage => 'Recitation completed successfully. Session restored.';
+  String get quranOfflineBanner => 'You are offline. Showing cached data.';
 
   @override
-  String get finish => 'Finish';
+  String get quranOfflineError =>
+      'You are offline and no cached data is available.';
 
   @override
-  String get settings => 'Settings';
+  String get quranSurahDetailTitle => 'Surah Detail';
 
   @override
-  String get language => 'Language';
+  String get quranAssignAyah => 'Assign as Target';
 
   @override
-  String get arabic => 'Arabic';
+  String get quranAyahAssigned => 'Ayah assigned successfully!';
 
   @override
-  String get english => 'English';
+  String get quranTranslation => 'Translation';
 
   @override
-  String get french => 'French';
+  String get quranAyahSearchTitle => 'Search Ayahs';
 
   @override
-  String get ramadanMode => 'Ramadan Mode';
+  String get quranAyahSearchPlaceholder => 'Enter keyword...';
 
   @override
-  String get ramadanModeDesc => 'Stricter limits and higher rewards during the holy month.';
+  String get quranAyahSearchNoResults => 'No ayahs found for this keyword';
 
   @override
-  String get strictRecitation => 'Strict Recitation';
+  String get quranBrowseBySurah => 'Browse by Surah';
 
   @override
-  String ayatProgress(Object current, Object total) {
-    return '$current / $total Ayat';
-  }
+  String get quranAssignmentTitle => 'Target Ayah';
 
   @override
-  String percentValue(Object value) {
-    return '$value%';
-  }
+  String get quranAssignmentNone => 'No target ayah assigned';
 
   @override
-  String get firstVerse => 'First Verse';
+  String get quranAssignmentClear => 'Clear Target';
 
   @override
-  String get threeDayStreak => '3 Day Streak';
+  String get quranAssignmentConfirm => 'Clear this assignment?';
 
   @override
-  String get nightOwl => 'Night Owl';
+  String get errorGeneric => 'An error occurred';
 
   @override
-  String get khatim => 'Khatim';
+  String get errorNetwork => 'Network error, check connection';
 
   @override
-  String get prophetQuote => '\"The best among you are those who learn the Qur\'an and teach it.\"';
+  String get errorMicUnavailable => 'Microphone is unavailable';
 
   @override
-  String get prophetName => 'Prophet Muhammad (PBUH)';
+  String get errorOffline => 'No internet connection';
+
+  @override
+  String get errorApiTimeout => 'Request timed out';
+
+  @override
+  String get errorNotFound => 'Resource not found';
+
+  @override
+  String get motivational1 => 'Keep going! You\'re doing great.';
+
+  @override
+  String get motivational2 => 'Every letter is a reward.';
+
+  @override
+  String get motivational3 => 'Consistency is key.';
+
+  @override
+  String get motivational4 => 'Connect with the Quran daily.';
+
+  @override
+  String get motivational5 => 'May Allah bless your efforts.';
+
+  @override
+  String get saveButton => 'Save';
+
+  @override
+  String get cancelButton => 'Cancel';
+
+  @override
+  String get confirmButton => 'Confirm';
+
+  @override
+  String get backButton => 'Back';
+
+  @override
+  String get openSettingsButton => 'Settings';
+
+  @override
+  String get grantButton => 'Grant';
+
+  @override
+  String get manageButton => 'Manage';
+
+  @override
+  String get retryButton => 'Retry';
+
+  @override
+  String get searchButton => 'Search';
 }

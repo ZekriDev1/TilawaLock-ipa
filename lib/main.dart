@@ -14,6 +14,7 @@ import 'providers/locale_provider.dart';
 import 'providers/permission_provider.dart';
 import 'providers/quran_provider.dart';
 import 'providers/recitation_provider.dart';
+import 'providers/lock_provider.dart';
 import 'screens/onboarding/permission_request_screen.dart';
 import 'screens/quran/surah_list_screen.dart';
 import 'screens/settings/settings_screen.dart';
@@ -39,6 +40,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => PermissionProvider(permissionService)),
         ChangeNotifierProvider(create: (_) => QuranProvider(quranRepository)),
         ChangeNotifierProvider(create: (_) => RecitationProvider(quranRepository, prefs)),
+        ChangeNotifierProvider(create: (_) => LockProvider(prefs)),
       ],
       child: const TilawaLockApp(),
     ),
@@ -62,9 +64,28 @@ class TilawaLockApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: language.fontFamily,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1B5E20), // Quranic Green
+        colorScheme: const ColorScheme(
           brightness: Brightness.light,
+          primary: Color(0xFF0F3D3E), // Deep Emerald
+          onPrimary: Colors.white,
+          secondary: Color(0xFFD4AF37), // Soft Gold
+          onSecondary: Colors.black,
+          surface: Color(0xFFF8F9FA), // Subtle Off-White
+          onSurface: Color(0xFF0F3D3E),
+          error: Colors.red,
+          onError: Colors.white,
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF8F9FA),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF0F3D3E),
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF0F3D3E),
+            foregroundColor: Colors.white,
+          ),
         ),
       ),
       home: const OnboardingGuard(),

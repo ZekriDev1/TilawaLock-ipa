@@ -6,6 +6,7 @@ import '../../providers/quran_provider.dart';
 import '../../services/quran_cache_service.dart';
 import 'language_selector_widget.dart';
 import 'permission_settings_widget.dart';
+import 'app_selector_screen.dart';
 import '../../l10n/app_localizations.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -26,6 +27,15 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           _SectionHeader(title: l10n.settingsPermissionsSection),
           const PermissionSettingsWidget(),
+          const Divider(),
+          _SectionHeader(title: 'Locking Settings'),
+          ListTile(
+            leading: const Icon(Icons.apps),
+            title: const Text('Apps to Lock'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const AppSelectorScreen()),
+            ),
+          ),
           const Divider(),
           _SectionHeader(title: l10n.settingsQuranSection),
           ListTile(

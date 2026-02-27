@@ -20,7 +20,15 @@ class PermissionRequestScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 48),
+              const SizedBox(height: 24),
+              Center(
+                child: Image.asset(
+                  'assets/AppLogo/applogo.png',
+                  height: 120,
+                  width: 120,
+                ),
+              ),
+              const SizedBox(height: 24),
               Text(
                 l10n.appName,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(

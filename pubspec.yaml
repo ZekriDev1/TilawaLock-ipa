@@ -19,17 +19,20 @@ dependencies:
   http: ^1.2.0
   cached_network_image: ^3.3.1
   connectivity_plus: ^5.0.2
+  device_apps: ^2.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_native_splash: ^2.4.0
 
 flutter:
   generate: true
   uses-material-design: true
   assets:
     - assets/fonts/
+    - assets/AppLogo/applogo.png
   fonts:
     - family: Poppins
       fonts:
@@ -41,3 +44,13 @@ flutter:
         - asset: assets/fonts/Amiri-Regular.ttf
         - asset: assets/fonts/Amiri-Bold.ttf
           weight: 700
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/AppLogo/applogo.png
+  android: true
+  ios: true
+
+  android_12:
+    image: assets/AppLogo/applogo.png
+    color: "#ffffff"

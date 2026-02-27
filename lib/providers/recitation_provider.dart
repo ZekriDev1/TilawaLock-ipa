@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/recitation_assignment_model.dart';
+import '../models/ayah_model.dart';
 import '../repositories/quran_repository.dart';
 import '../core/constants/storage_keys.dart';
 
@@ -12,8 +13,11 @@ class RecitationProvider extends ChangeNotifier {
   final SharedPreferences _prefs;
 
   RecitationAssignmentModel? _currentAssignment;
+  List<AyahModel> _sessionAyahs = [];
+  int _currentAyahIndex = 0;
   bool _isSessionActive = false;
   SessionResult _lastSessionResult = SessionResult.none;
+  bool _isLoading = false;
 
   RecitationProvider(this._repository, this._prefs) {
     _loadAssignment();
@@ -21,8 +25,11 @@ class RecitationProvider extends ChangeNotifier {
 
   RecitationAssignmentModel? get currentAssignment => _currentAssignment;
   bool get hasAssignment => _currentAssignment != null;
+  List<AyahModel> get sessionAyahs => _sessionAyahs;
+  int get currentAyahIndex => _currentAyahIndex;
   bool get isSessionActive => _isSessionActive;
   SessionResult get lastSessionResult => _lastSessionResult;
+  bool get isLoading => _isLoading;
 
   void _loadAssignment() {
     final surahNum = _prefs.getInt(StorageKeys.assignedSurahNumber);
@@ -98,5 +105,37 @@ class RecitationProvider extends ChangeNotifier {
     _isSessionActive = false;
     _lastSessionResult = result;
     notifyListeners();
+  }
+
+  Future<void> prepareUnlockSession() async {
+    if (_currentAssignment == null) return;
+    
+    _isLoading = true;
+    _sessionAyahs = [];
+    _currentAyahIndex = 0;
+    notifyListeners();
+
+    try {
+      final surah = await _repository.getSurah(_currentAssignment!.surahNumber);
+      final startIndex = _currentAssignment!.ayahNumber - 1;
+      
+      // Get 5 ayahs starting from the assigned one
+      _sessionAyahs = surah.ayahs!.skip(startIndex).take(5).toList();
+      
+      // If we don't have enough ayahs in this surah, we might need to handle it
+      // For now, let's just take what we have
+    } catch (e) {
+      debugPrint("Error preparing session: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void nextAyah() {
+    if (_currentAyahIndex < _sessionAyahs.length - 1) {
+      _currentAyahIndex++;
+      notifyListeners();
+    }
   }
 }
